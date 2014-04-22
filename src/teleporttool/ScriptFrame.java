@@ -94,9 +94,11 @@ public class ScriptFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-        Module module = (Module)this.jList1.getModel().getElementAt(this.jList1.getSelectedIndex());
-        ModuleFrame moduleFrame = new ModuleFrame(module);
-        moduleFrame.setVisible(true);
+        if(!jList1.getValueIsAdjusting()){
+            Module module = (Module)this.jList1.getModel().getElementAt(this.jList1.getSelectedIndex());
+            ModuleFrame moduleFrame = new ModuleFrame(module);
+            moduleFrame.setVisible(true);
+        }
     }//GEN-LAST:event_jList1ValueChanged
 
 

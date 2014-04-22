@@ -6,11 +6,7 @@
 
 package teleporttool;
 
-import com.cedarsoftware.util.io.JsonReader;
-import com.cedarsoftware.util.io.JsonWriter;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -123,5 +119,6 @@ public class FetcherFrame extends javax.swing.JFrame implements ScriptFetcherDel
     @Override
     public void fetchFailed(Exception e) {
         System.out.println(e);
+        JOptionPane.showMessageDialog(this, e.toString());
     }
 }

@@ -23,6 +23,7 @@ public class Module {
     private Object data;
     private String modified;
     private Long ttl;
+    private Long duration;
 
     public static Collection fromCollection(Collection list) {
         ArrayList moduleList = new ArrayList(list.size());
@@ -46,6 +47,7 @@ public class Module {
         module.data = map.get("data");
         module.modified = (String)map.get("modified");
         module.ttl = (Long)map.get("ttl");
+        module.duration = (Long)map.get("duration");
         
         return module;
     }
@@ -131,6 +133,14 @@ public class Module {
      */
     public void setTtl(Long ttl) {
         this.ttl = ttl;
+    }
+    
+    public void setDuration(Long duration) {
+        this.duration = duration;
+    }
+    
+    public Long getDuration() {
+        return this.duration;
     }
     
     @Override
