@@ -8,7 +8,10 @@ package teleporttool;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.ListModel;
+import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 /**
@@ -18,6 +21,8 @@ import javax.swing.event.ListDataListener;
 public class ModuleListModel implements ListModel {
 
     private final ArrayList<Module> modules;
+    private List<ListDataListener> dataListeners;
+    
     
     public ModuleListModel() {
         modules = new ArrayList();
@@ -25,6 +30,7 @@ public class ModuleListModel implements ListModel {
     
     public void addModules(Collection modules) {
         boolean addAll = this.modules.addAll(modules);
+        notifyListeners();
     }
     
     @Override
@@ -39,12 +45,22 @@ public class ModuleListModel implements ListModel {
 
     @Override
     public void addListDataListener(ListDataListener l) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(this.dataListeners == null) {
+            this.dataListeners = new LinkedList();
+        }
+        
+        this.dataListeners.add(l);
     }
 
     @Override
     public void removeListDataListener(ListDataListener l) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.dataListeners.remove(l);
+    }
+   
+    private void notifyListeners() {
+        for (ListDataListener listener : this.dataListeners) {
+            listener.contentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED,0, this.modules.size()));
+        }
     }
     
 }

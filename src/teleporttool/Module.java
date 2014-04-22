@@ -6,44 +6,74 @@
 
 package teleporttool;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  *
  * @author brennan
  */
 public class Module {
     
-    private Integer id;
-    private Integer timestamp;
+    private Long id;
+    private Long timestamp;
     private String type;
     private Object data;
     private String modified;
-    private Integer ttl;
+    private Long ttl;
 
+    public static Collection fromCollection(Collection list) {
+        ArrayList moduleList = new ArrayList(list.size());
+        Iterator iter = list.iterator();
+       
+        while(iter.hasNext()) {
+            Map next = (Map)iter.next();
+            Module module = Module.fromMap(next);
+            moduleList.add(module);
+        }
+        
+        return moduleList;
+    }
+    
+    public static Module fromMap(Map map) {
+        Module module = new Module();
+        
+        module.id = (Long)map.get("id");
+        module.timestamp = (Long)map.get("timestamp");
+        module.type = (String)map.get("type");
+        module.data = map.get("data");
+        module.modified = (String)map.get("modified");
+        module.ttl = (Long)map.get("ttl");
+        
+        return module;
+    }
     /**
      * @return the id
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     /**
      * @return the timestamp
      */
-    public Integer getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
     /**
      * @param timestamp the timestamp to set
      */
-    public void setTimestamp(Integer timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -92,16 +122,19 @@ public class Module {
     /**
      * @return the ttl
      */
-    public Integer getTtl() {
+    public Long getTtl() {
         return ttl;
     }
 
     /**
      * @param ttl the ttl to set
      */
-    public void setTtl(Integer ttl) {
+    public void setTtl(Long ttl) {
         this.ttl = ttl;
     }
     
-    
+    @Override
+    public String toString() {
+        return this.timestamp.toString() + " - " + this.type;
+    }
 }

@@ -7,8 +7,10 @@
 package teleporttool;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.ComboBoxModel;
+import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 /**
@@ -19,6 +21,7 @@ public class ClientIdModel implements ComboBoxModel {
 
     private List<ClientId> clientIds;
     private ClientId selectedItem;
+    private List<ListDataListener> dataListeners;
     
     public ClientIdModel() {
         //@{@"stage" : @"WVhS7fp", @"demo" : @"YIbxOn8", @"production" : @"d75gDl8"};
@@ -37,6 +40,7 @@ public class ClientIdModel implements ComboBoxModel {
             this.clientIds = new ArrayList();
         }
         this.clientIds.add(newId);
+        notifyListeners();
     }
     
     @Override
@@ -68,10 +72,21 @@ public class ClientIdModel implements ComboBoxModel {
 
     @Override
     public void addListDataListener(ListDataListener l) {
+        if(this.dataListeners == null) {
+            this.dataListeners = new LinkedList();
+        }
+        
+        this.dataListeners.add(l);
     }
 
     @Override
     public void removeListDataListener(ListDataListener l) {
+        this.dataListeners.remove(l);
     }
    
+    private void notifyListeners() {
+        for (ListDataListener listener : this.dataListeners) {
+            listener.contentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED,0, this.clientIds.size()));
+        }
+    }
 }
