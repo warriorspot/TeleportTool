@@ -8,6 +8,11 @@ package teleporttool;
 
 import com.cedarsoftware.util.io.JsonObject;
 import com.cedarsoftware.util.io.JsonReader;
+import com.cedarsoftware.util.io.JsonWriter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -39,6 +44,8 @@ public class ScriptFrame extends javax.swing.JFrame {
         JsonObject object = (JsonObject)this.scriptData.get("modules");
         Object[] modules = object.getArray();
         model.addModules(Module.fromCollection(Arrays.asList(modules)));
+        this.scriptTextArea.setText(prettyJSON(script));
+        this.scriptTextArea.setCaretPosition(0);
     }
     
     /**
@@ -58,6 +65,7 @@ public class ScriptFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         scriptTextArea.setColumns(20);
+        scriptTextArea.setLineWrap(true);
         scriptTextArea.setRows(5);
         jScrollPane1.setViewportView(scriptTextArea);
 
@@ -75,7 +83,7 @@ public class ScriptFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -85,7 +93,7 @@ public class ScriptFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
                     .addComponent(jScrollPane2))
                 .addContainerGap())
         );
@@ -101,6 +109,12 @@ public class ScriptFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jList1ValueChanged
 
+    private String prettyJSON(String uglyJSON) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser jp = new JsonParser();
+        JsonElement je = jp.parse(uglyJSON);
+        return gson.toJson(je);
+    }
 
     public javax.swing.JTextArea getScriptTextArea() {
         return this.scriptTextArea;

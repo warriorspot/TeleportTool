@@ -42,7 +42,6 @@ public class TeleportTool implements NotificationListener {
             String script = (String) notification.getData();
             ScriptFrame scriptFrame = new ScriptFrame(script);
             scriptFrame.setVisible(true);
-            scriptFrame.getScriptTextArea().setText(script);
         }
     }
     

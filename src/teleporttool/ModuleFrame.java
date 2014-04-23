@@ -6,6 +6,13 @@
 
 package teleporttool;
 
+import java.awt.BorderLayout;
+import java.net.URLDecoder;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.web.WebView;
 /**
  *
  * @author bcleveland
@@ -13,12 +20,20 @@ package teleporttool;
 public class ModuleFrame extends javax.swing.JFrame {
 
     private Module module;
+    private WebView webComponent;
+    JFXPanel javafxPanel;
     
     /**
      * Creates new form ModuleFrame
      */
     public ModuleFrame() {
+        javafxPanel = new JFXPanel();
         initComponents();
+        this.webViewParent.setLayout(new BorderLayout());
+        this.webViewParent.add(javafxPanel, BorderLayout.CENTER);
+        this.webViewParent.add(javafxPanel);
+        loadJavaFXScene();
+ 
         this.setDefaultCloseOperation(HIDE_ON_CLOSE);
     }
 
@@ -32,8 +47,31 @@ public class ModuleFrame extends javax.swing.JFrame {
         this.durationTextField.setText(module.getDuration().toString());
         this.modifiedTextField.setText(module.getModified());
         this.ttlTextField.setText(module.getTtl().toString());
-        this.dataTextArea.setText(module.getData().toString());
+        this.dataTextArea.setText(URLDecoder.decode(module.getData().toString()));
+        this.setTitle("Module ID: " + module.getId().toString());
     }
+    
+  /**
+  * Instantiate the JavaFX Components in
+  * the JavaFX Application Thread.
+  */
+  private void loadJavaFXScene(){
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+
+        BorderPane borderPane = new BorderPane();
+        webComponent = new WebView();
+        
+        webComponent.getEngine().loadContent(URLDecoder.decode(module.getData().toString()));
+
+        borderPane.setCenter(webComponent);
+        Scene scene = new Scene(borderPane,320,480);
+        javafxPanel.setScene(scene);
+
+      }
+    });
+  }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -44,7 +82,7 @@ public class ModuleFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        webViewParent = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         dataTextArea = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
@@ -61,18 +99,18 @@ public class ModuleFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setMaximumSize(new java.awt.Dimension(320, 480));
-        jPanel1.setMinimumSize(new java.awt.Dimension(320, 480));
-        jPanel1.setPreferredSize(new java.awt.Dimension(320, 480));
+        webViewParent.setMaximumSize(new java.awt.Dimension(320, 480));
+        webViewParent.setMinimumSize(new java.awt.Dimension(320, 480));
+        webViewParent.setPreferredSize(new java.awt.Dimension(320, 480));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout webViewParentLayout = new javax.swing.GroupLayout(webViewParent);
+        webViewParent.setLayout(webViewParentLayout);
+        webViewParentLayout.setHorizontalGroup(
+            webViewParentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 320, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        webViewParentLayout.setVerticalGroup(
+            webViewParentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
@@ -115,7 +153,7 @@ public class ModuleFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -143,7 +181,7 @@ public class ModuleFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(durationTextField)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(webViewParent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
         layout.setVerticalGroup(
@@ -177,7 +215,7 @@ public class ModuleFrame extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 454, Short.MAX_VALUE)
+                        .addComponent(webViewParent, javax.swing.GroupLayout.PREFERRED_SIZE, 454, Short.MAX_VALUE)
                         .addGap(27, 27, 27))))
         );
 
@@ -195,11 +233,11 @@ public class ModuleFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField modifiedTextField;
     private javax.swing.JTextField timestampTextField;
     private javax.swing.JTextField ttlTextField;
     private javax.swing.JTextField typeTextField;
+    private javax.swing.JPanel webViewParent;
     // End of variables declaration//GEN-END:variables
 }
