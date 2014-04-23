@@ -32,7 +32,6 @@ public class ModuleFrame extends javax.swing.JFrame {
         this.webViewParent.setLayout(new BorderLayout());
         this.webViewParent.add(javafxPanel, BorderLayout.CENTER);
         this.webViewParent.add(javafxPanel);
-        loadJavaFXScene();
  
         this.setDefaultCloseOperation(HIDE_ON_CLOSE);
     }
@@ -50,6 +49,8 @@ public class ModuleFrame extends javax.swing.JFrame {
         this.dataTextArea.setText(URLDecoder.decode(module.getData().toString()));
         this.dataTextArea.setCaretPosition(0);
         this.setTitle("Module ID: " + module.getId().toString());
+        
+        loadJavaFXScene();
     }
     
   /**
