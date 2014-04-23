@@ -9,6 +9,8 @@ package teleporttool;
 import com.brennancleveland.notificationcenter.Notification;
 import com.brennancleveland.notificationcenter.NotificationCenter;
 import com.brennancleveland.notificationcenter.NotificationListener;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -21,6 +23,13 @@ public class TeleportTool implements NotificationListener {
      */
     public static void main(String[] args) {
        /* Create and display the form */
+        try {
+            // Set cross-platform Java L&F (also called "Metal")
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } 
+        catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+           // handle exception
+        }
         TeleportTool tool = new TeleportTool();
         tool.start();
     }
