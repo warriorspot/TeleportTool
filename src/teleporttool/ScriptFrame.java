@@ -12,17 +12,21 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Map;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author brennan
  */
-public class ScriptFrame extends javax.swing.JFrame {
+public class ScriptFrame extends javax.swing.JFrame implements ScriptFetcherDelegate {
 
     private String script;
     private Map scriptData;
+    private String airingId;
+    private String clientId;
     
     /**
      * Creates new form ScriptFrame
@@ -32,21 +36,14 @@ public class ScriptFrame extends javax.swing.JFrame {
         this.setDefaultCloseOperation(HIDE_ON_CLOSE);
     }
 
-    public ScriptFrame(String script) {
+    public ScriptFrame(String script, String airingId, String clientId) {
         this();
         
         this.script = script;
-        this.scriptData = JsonReader.toMaps(script);
-        ModuleListModel model = (ModuleListModel) this.jList1.getModel();
+        this.airingId = airingId;
+        this.clientId = clientId;
         
-        JsonObject object = (JsonObject)this.scriptData.get("modules");
-        Object[] modules = object.getArray();
-        model.addModules(Module.fromCollection(Arrays.asList(modules)));
-        this.scriptTextArea.setText(prettyJSON(script));
-        this.scriptTextArea.setCaretPosition(0);
-        
-        String title = (String)this.scriptData.get("airing_id") + " : " + this.scriptData.get("duration").toString() + " sec";
-        this.setTitle(title);
+        updateWithScript(script);
     }
     
     /**
@@ -62,6 +59,9 @@ public class ScriptFrame extends javax.swing.JFrame {
         scriptTextArea = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -77,6 +77,21 @@ public class ScriptFrame extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(jList1);
+
+        jMenu1.setText("File");
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Refresh");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,7 +109,7 @@ public class ScriptFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
                     .addComponent(jScrollPane2))
                 .addContainerGap())
         );
@@ -110,22 +125,65 @@ public class ScriptFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jList1ValueChanged
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        refreshScript();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     private String prettyJSON(String uglyJSON) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonParser jp = new JsonParser();
         JsonElement je = jp.parse(uglyJSON);
         return gson.toJson(je);
     }
+    
+    private void refreshScript() {
+        ScriptFetcher.sharedInstance().fetchScript(this.airingId, this.clientId, this);
+    }
 
+    private void updateWithScript(String script) {
+        this.scriptData = JsonReader.toMaps(script);
+        
+        ModuleListModel model = (ModuleListModel) this.jList1.getModel();
+        JsonObject object = (JsonObject)this.scriptData.get("modules");
+        Object[] modules = object.getArray();
+        model.removeAllModules();
+        model.addModules(Module.fromCollection(Arrays.asList(modules)));
+        
+        this.scriptTextArea.setText(prettyJSON(script));
+        this.scriptTextArea.setCaretPosition(0);
+        
+        String title = this.airingId + " : " + this.scriptData.get("duration").toString() + " sec";
+        this.setTitle(title);
+    }
+    
     public javax.swing.JTextArea getScriptTextArea() {
         return this.scriptTextArea;
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList jList1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea scriptTextArea;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void fetchWillStart() {
+        
+    }
+
+    @Override
+    public void fetchCompleted(Map userData) {
+        this.script = (String) userData.get("script");
+        updateWithScript(this.script);
+    }
+
+    @Override
+    public void fetchFailed(Exception e) {
+        JOptionPane.showMessageDialog(this, e.toString());
+    }
 
 }
