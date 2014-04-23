@@ -16,6 +16,7 @@ import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.HostnameVerifier;
@@ -32,9 +33,23 @@ import javax.net.ssl.X509TrustManager;
 public class ScriptFetcher {
    
     private ScriptFetcherDelegate delegate;
+    private String airingId;
+    private String clientId;
+    
+    private static ScriptFetcher instance = null;
     public static final String ScriptFetcherDidFetchScriptNotification = "ScriptFetcherDidFetchScript";
     
-            
+    public static ScriptFetcher sharedInstance() {
+        if(instance == null) {
+            instance = new ScriptFetcher();
+        }
+        return instance;
+    }
+    
+    public String fetchScript() {
+        return fetchScript(this.airingId, this.clientId, this.delegate);
+    }
+    
     public String fetchScript(String airingId, String clientId) {
         return fetchScript(airingId, clientId, this.delegate);
     }
@@ -51,6 +66,7 @@ public class ScriptFetcher {
         String urlString = "https://stage.cdn.teleport.gravitymobile.com/" + clientId + "/" + airingId + "/script.json";
         System.out.println(urlString);
         String data = new String();
+        HashMap userData = new HashMap();
        
         try {
             URL url = new URL(urlString);
@@ -61,11 +77,15 @@ public class ScriptFetcher {
                 data += line + "\n";
             }
             
+            userData.put("script", data);
+            userData.put("client_id", clientId);
+            userData.put("airing_id", airingId);
+            
             if(delegate != null) {
-                delegate.fetchCompleted(data);
+                delegate.fetchCompleted(userData);
             }
            
-            NotificationCenter.sharedInstance().postNotification(ScriptFetcher.ScriptFetcherDidFetchScriptNotification, data);
+            NotificationCenter.sharedInstance().postNotification(ScriptFetcher.ScriptFetcherDidFetchScriptNotification, userData);
             
             System.out.println(data);
         } catch(IOException e) {
@@ -75,6 +95,30 @@ public class ScriptFetcher {
         }
 
         return null;
+    }
+    
+    public void setAiringId(String airingId) {
+        this.airingId = airingId;
+    }
+    
+    public String getAiringId() {
+        return this.airingId;
+    }
+    
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+    
+    public String getClientId() {
+        return this.clientId;
+    }
+    
+    public void setDelegate(ScriptFetcherDelegate delegate) {
+        this.delegate = delegate;
+    }
+    
+    public ScriptFetcherDelegate getDelegate() {
+        return this.delegate;
     }
     
     private void disableSSLChecking()
@@ -99,9 +143,7 @@ public class ScriptFetcher {
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(ScriptFetcher.class.getName()).log(Level.SEVERE, null, ex);
-        } catch(KeyManagementException ex) {
+        } catch (NoSuchAlgorithmException | KeyManagementException ex) {
             Logger.getLogger(ScriptFetcher.class.getName()).log(Level.SEVERE, null, ex);
         }
     

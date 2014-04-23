@@ -6,6 +6,8 @@
 
 package teleporttool;
 
+import java.util.Map;
+
 /**
  *
  * @author brennan
@@ -13,7 +15,7 @@ package teleporttool;
 public interface ScriptFetcherDelegate {
  
     public void fetchWillStart();
-    public void fetchCompleted(String script);
+    public void fetchCompleted(Map userData);
     public void fetchFailed(Exception e);
     
 }

@@ -6,6 +6,7 @@
 
 package teleporttool;
 
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -93,7 +94,7 @@ public class FetcherFrame extends javax.swing.JFrame implements ScriptFetcherDel
         String airingId = this.jTextField1.getText();
         ClientId id = (ClientId)this.jComboBox1.getModel().getSelectedItem();
         String clientId = id.getId();
-        new ScriptFetcher().fetchScript(airingId, clientId, this);
+        ScriptFetcher.sharedInstance().fetchScript(airingId, clientId, this);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -110,8 +111,12 @@ public class FetcherFrame extends javax.swing.JFrame implements ScriptFetcherDel
     }
 
     @Override
-    public void fetchCompleted(String script) {
-        System.out.println("Fetch completed");
+    public void fetchCompleted(Map userData) {
+        String script = (String) userData.get("script");
+        String airingId = (String) userData.get("airing_id");
+        String clientId = (String) userData.get("client_id");
+        ScriptFrame scriptFrame = new ScriptFrame(script, airingId, clientId);
+        scriptFrame.setVisible(true);
     }
 
     @Override

@@ -33,6 +33,11 @@ public class ModuleListModel implements ListModel {
         notifyListeners();
     }
     
+    public void removeAllModules() {
+        this.modules.clear();
+        notifyListeners();
+    }
+    
     @Override
     public int getSize() {
         return this.modules.size();

@@ -61,7 +61,6 @@ public class ModuleFrame extends javax.swing.JFrame {
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
-
         BorderPane borderPane = new BorderPane();
         webComponent = new WebView();
         
