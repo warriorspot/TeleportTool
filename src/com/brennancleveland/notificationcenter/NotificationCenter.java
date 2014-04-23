@@ -16,7 +16,7 @@ public class NotificationCenter {
     }
     
     public NotificationCenter() {
-        this.observers = new HashMap<>();
+        this.observers = new HashMap<String, LinkedList>();
     }
 
     public void addListener(NotificationListener listener, String notificationName) {

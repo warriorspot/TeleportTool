@@ -99,7 +99,9 @@ public class ScriptFetcher {
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (NoSuchAlgorithmException | KeyManagementException ex) {
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(ScriptFetcher.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(KeyManagementException ex) {
             Logger.getLogger(ScriptFetcher.class.getName()).log(Level.SEVERE, null, ex);
         }
     
