@@ -93,8 +93,7 @@ public class FetcherFrame extends javax.swing.JFrame implements ScriptFetcherDel
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String airingId = this.jTextField1.getText();
         ClientId id = (ClientId)this.jComboBox1.getModel().getSelectedItem();
-        String clientId = id.getId();
-        ScriptFetcher.sharedInstance().fetchScript(airingId, clientId, this);
+        ScriptFetcher.sharedInstance().fetchScript(airingId, id.getId(), id.getUrl(), this);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

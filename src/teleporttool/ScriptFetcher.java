@@ -35,6 +35,7 @@ public class ScriptFetcher {
     private ScriptFetcherDelegate delegate;
     private String airingId;
     private String clientId;
+    private String url;
     
     private static ScriptFetcher instance = null;
     public static final String ScriptFetcherDidFetchScriptNotification = "ScriptFetcherDidFetchScript";
@@ -47,14 +48,14 @@ public class ScriptFetcher {
     }
     
     public String fetchScript() {
-        return fetchScript(this.airingId, this.clientId, this.delegate);
+        return fetchScript(this.airingId, this.clientId, this.url, this.delegate);
     }
     
-    public String fetchScript(String airingId, String clientId) {
-        return fetchScript(airingId, clientId, this.delegate);
+    public String fetchScript(String airingId, String clientId, String url) {
+        return fetchScript(airingId, clientId, url, this.delegate);
     }
     
-    public String fetchScript(String airingId, String clientId,  ScriptFetcherDelegate delegate) {
+    public String fetchScript(String airingId, String clientId,  String cdnUrl, ScriptFetcherDelegate delegate) {
         String line;
         
         this.disableSSLChecking();
@@ -63,7 +64,7 @@ public class ScriptFetcher {
             delegate.fetchWillStart();
         }
         
-        String urlString = "https://stage.cdn.teleport.gravitymobile.com/" + clientId + "/" + airingId + "/script.json";
+        String urlString = cdnUrl + clientId + "/" + airingId + "/script.json";
         System.out.println(urlString);
         String data = new String();
         HashMap userData = new HashMap();
@@ -111,6 +112,14 @@ public class ScriptFetcher {
     
     public String getClientId() {
         return this.clientId;
+    }
+    
+    public String getUrl() {
+        return this.url;
+    }
+    
+    public void setUrl(String url) {
+        this.url = url;
     }
     
     public void setDelegate(ScriptFetcherDelegate delegate) {

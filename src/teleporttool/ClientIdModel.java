@@ -27,8 +27,9 @@ public class ClientIdModel implements ComboBoxModel {
         //@{@"stage" : @"WVhS7fp", @"demo" : @"YIbxOn8", @"production" : @"d75gDl8"};
 
         this.clientIds = new ArrayList();
-        this.clientIds.add(new ClientId("stage", "WVhS7fp"));
-        this.clientIds.add(new ClientId("demo", "YIbxOn8"));
+        this.clientIds.add(new ClientId("stage", "WVhS7fp", "https://stage.cdn.teleport.gravitymobile.com/"));
+        this.clientIds.add(new ClientId("demo", "YIbxOn8", "https://stage.cdn.teleport.gravitymobile.com/" ));
+        this.clientIds.add(new ClientId("gravity-dev", "testing", "https://s3.amazonaws.com/gravity-development/"));   
     }
     
     public ClientIdModel(List clientIds) {

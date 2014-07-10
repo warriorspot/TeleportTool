@@ -14,10 +14,12 @@ public class ClientId {
     
     private final String name;
     private final String id;
+    private final String url;
     
-    public ClientId(String name, String id) {
+    public ClientId(String name, String id, String url) {
         this.name = name;
         this.id = id;
+        this.url = url;
     }
     
     public String getName() {
@@ -26,6 +28,10 @@ public class ClientId {
     
     public String getId() {
         return this.id;
+    }
+    
+    public String getUrl() {
+        return this.url;
     }
     
     @Override

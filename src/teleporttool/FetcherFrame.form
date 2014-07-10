@@ -90,6 +90,9 @@
           <Connection code="new ClientIdModel()" type="code"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="FetcherFrame_jComboBox1"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>
