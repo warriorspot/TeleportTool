@@ -114,7 +114,8 @@ public class FetcherFrame extends javax.swing.JFrame implements ScriptFetcherDel
         String script = (String) userData.get("script");
         String airingId = (String) userData.get("airing_id");
         String clientId = (String) userData.get("client_id");
-        ScriptFrame scriptFrame = new ScriptFrame(script, airingId, clientId);
+        String url = (String) userData.get("url");
+        ScriptFrame scriptFrame = new ScriptFrame(script, airingId, clientId, url);
         scriptFrame.setVisible(true);
     }
 

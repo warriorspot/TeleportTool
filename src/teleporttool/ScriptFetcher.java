@@ -81,6 +81,7 @@ public class ScriptFetcher {
             userData.put("script", data);
             userData.put("client_id", clientId);
             userData.put("airing_id", airingId);
+            userData.put("url", cdnUrl);
             
             if(delegate != null) {
                 delegate.fetchCompleted(userData);

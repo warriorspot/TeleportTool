@@ -26,6 +26,7 @@ public class ScriptFrame extends javax.swing.JFrame implements ScriptFetcherDele
     private Map scriptData;
     private String airingId;
     private String clientId;
+    private String url;
     
     /**
      * Creates new form ScriptFrame
@@ -35,12 +36,13 @@ public class ScriptFrame extends javax.swing.JFrame implements ScriptFetcherDele
         this.setDefaultCloseOperation(HIDE_ON_CLOSE);
     }
 
-    public ScriptFrame(String script, String airingId, String clientId) {
+    public ScriptFrame(String script, String airingId, String clientId, String url) {
         this();
         
         this.script = script;
         this.airingId = airingId;
         this.clientId = clientId;
+        this.url = url;
         
         updateWithScript(script);
     }
@@ -138,7 +140,7 @@ public class ScriptFrame extends javax.swing.JFrame implements ScriptFetcherDele
     }
     
     private void refreshScript() {
-        ScriptFetcher.sharedInstance().fetchScript(this.airingId, this.clientId, this);
+        ScriptFetcher.sharedInstance().fetchScript(this.airingId, this.clientId, this.url, this);
     }
 
     private void updateWithScript(String script) {
