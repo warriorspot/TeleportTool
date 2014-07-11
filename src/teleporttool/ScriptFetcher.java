@@ -36,6 +36,7 @@ public class ScriptFetcher {
     private String airingId;
     private String clientId;
     private String url;
+    private String moduleId;
     
     private static ScriptFetcher instance = null;
     public static final String ScriptFetcherDidFetchScriptNotification = "ScriptFetcherDidFetchScript";
@@ -48,14 +49,14 @@ public class ScriptFetcher {
     }
     
     public String fetchScript() {
-        return fetchScript(this.airingId, this.clientId, this.url, this.delegate);
+        return fetchScript(this.airingId, this.clientId, null, this.url, this.delegate);
     }
     
     public String fetchScript(String airingId, String clientId, String url) {
-        return fetchScript(airingId, clientId, url, this.delegate);
+        return fetchScript(airingId, clientId, null, url, this.delegate);
     }
     
-    public String fetchScript(String airingId, String clientId,  String cdnUrl, ScriptFetcherDelegate delegate) {
+    public String fetchScript(String airingId, String clientId, String moduleId, String cdnUrl, ScriptFetcherDelegate delegate) {
         String line;
         
         this.disableSSLChecking();
@@ -64,7 +65,12 @@ public class ScriptFetcher {
             delegate.fetchWillStart();
         }
         
-        String urlString = cdnUrl + clientId + "/" + airingId + "/script.json";
+        String urlString = cdnUrl + clientId + "/" + airingId;
+        if(moduleId != null && moduleId.length() > 0) {
+            urlString = urlString + "/" + moduleId;
+        }
+        urlString = urlString + "/script.json";
+        
         System.out.println(urlString);
         String data = new String();
         HashMap userData = new HashMap();
@@ -82,6 +88,7 @@ public class ScriptFetcher {
             userData.put("client_id", clientId);
             userData.put("airing_id", airingId);
             userData.put("url", cdnUrl);
+            userData.put("module_id", moduleId);
             
             if(delegate != null) {
                 delegate.fetchCompleted(userData);
@@ -121,6 +128,14 @@ public class ScriptFetcher {
     
     public void setUrl(String url) {
         this.url = url;
+    }
+    
+    public String getModuleId() {
+        return this.moduleId;
+    }
+    
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
     }
     
     public void setDelegate(ScriptFetcherDelegate delegate) {

@@ -27,6 +27,7 @@ public class ScriptFrame extends javax.swing.JFrame implements ScriptFetcherDele
     private String airingId;
     private String clientId;
     private String url;
+    private String moduleId;
     
     /**
      * Creates new form ScriptFrame
@@ -36,13 +37,14 @@ public class ScriptFrame extends javax.swing.JFrame implements ScriptFetcherDele
         this.setDefaultCloseOperation(HIDE_ON_CLOSE);
     }
 
-    public ScriptFrame(String script, String airingId, String clientId, String url) {
+    public ScriptFrame(String script, String airingId, String clientId, String moduleId, String url) {
         this();
         
         this.script = script;
         this.airingId = airingId;
         this.clientId = clientId;
         this.url = url;
+        this.moduleId = moduleId;
         
         updateWithScript(script);
     }
@@ -140,17 +142,19 @@ public class ScriptFrame extends javax.swing.JFrame implements ScriptFetcherDele
     }
     
     private void refreshScript() {
-        ScriptFetcher.sharedInstance().fetchScript(this.airingId, this.clientId, this.url, this);
+        ScriptFetcher.sharedInstance().fetchScript(this.airingId, this.clientId, this.moduleId, this.url, this);
     }
 
     private void updateWithScript(String script) {
         this.scriptData = JsonReader.toMaps(script);
         
-        ModuleListModel model = (ModuleListModel) this.jList1.getModel();
         JsonObject object = (JsonObject)this.scriptData.get("modules");
-        Object[] modules = object.getArray();
+        ModuleListModel model = (ModuleListModel) this.jList1.getModel();
         model.removeAllModules();
-        model.addModules(Module.fromCollection(Arrays.asList(modules)));
+        if(object != null) {
+            Object[] modules = object.getArray();
+            model.addModules(Module.fromCollection(Arrays.asList(modules)));
+        }
         
         this.scriptTextArea.setText(prettyJSON(script));
         this.scriptTextArea.setCaretPosition(0);
