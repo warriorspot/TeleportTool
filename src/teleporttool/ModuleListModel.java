@@ -28,8 +28,13 @@ public class ModuleListModel implements ListModel {
         modules = new ArrayList();
     }
     
+    public void addModule(Module module) {
+        this.modules.add(module);
+        notifyListeners();
+    }
+    
     public void addModules(Collection modules) {
-        boolean addAll = this.modules.addAll(modules);
+        this.modules.addAll(modules);
         notifyListeners();
     }
     

@@ -148,12 +148,21 @@ public class ScriptFrame extends javax.swing.JFrame implements ScriptFetcherDele
     private void updateWithScript(String script) {
         this.scriptData = JsonReader.toMaps(script);
         
-        JsonObject object = (JsonObject)this.scriptData.get("modules");
         ModuleListModel model = (ModuleListModel) this.jList1.getModel();
         model.removeAllModules();
-        if(object != null) {
-            Object[] modules = object.getArray();
-            model.addModules(Module.fromCollection(Arrays.asList(modules)));
+        
+        // Assume if the moduleId property is non-null, that this
+        // script is a Big Red Button script, and the script itself
+        // represents a single module.
+        if(this.moduleId != null && this.moduleId.length() > 0) {
+            model.addModule(Module.fromMap(scriptData));
+        }
+        else {
+            JsonObject object = (JsonObject)this.scriptData.get("modules");
+            if(object != null) {
+                Object[] modules = object.getArray();
+                model.addModules(Module.fromCollection(Arrays.asList(modules)));
+            }
         }
         
         this.scriptTextArea.setText(prettyJSON(script));
