@@ -6,6 +6,9 @@
 
 package teleporttool;
 
+import com.brennancleveland.notificationcenter.NotificationCenter;
+import com.brennancleveland.notificationcenter.NotificationListener;
+import com.brennancleveland.notificationcenter.Notification;
 import java.util.Map;
 import javax.swing.JOptionPane;
 
@@ -13,13 +16,14 @@ import javax.swing.JOptionPane;
  *
  * @author brennan
  */
-public class FetcherFrame extends javax.swing.JFrame implements ScriptFetcherDelegate {
+public class FetcherFrame extends javax.swing.JFrame implements ScriptFetcherDelegate, NotificationListener {
 
     /**
      * Creates new form FetcherFrame
      */
     public FetcherFrame() {
         initComponents();
+        NotificationCenter.sharedInstance().addListener(this, ScriptFrame.ScriptFrameShowMainNotification);
     }
 
     /**
@@ -153,5 +157,12 @@ public class FetcherFrame extends javax.swing.JFrame implements ScriptFetcherDel
     public void fetchFailed(Exception e) {
         System.out.println(e);
         JOptionPane.showMessageDialog(this, e.toString());
+    }
+    
+    @Override
+    public void notificationReceived(Notification n) {
+        if(n.getName().equals(ScriptFrame.ScriptFrameShowMainNotification)) {
+            this.setVisible(true);
+        }
     }
 }
