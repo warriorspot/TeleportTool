@@ -183,7 +183,7 @@ public class ScriptFrame extends javax.swing.JFrame implements ScriptFetcherDele
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private String prettyJSON(String uglyJSON) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
         JsonParser jp = new JsonParser();
         JsonElement je = jp.parse(uglyJSON);
         return gson.toJson(je);
