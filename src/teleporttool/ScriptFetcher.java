@@ -59,7 +59,7 @@ public class ScriptFetcher {
     public String fetchScript(String airingId, String clientId, String moduleId, String cdnUrl, ScriptFetcherDelegate delegate) {
         String line;
         
-        this.disableSSLChecking();
+        //this.disableSSLChecking();
         
         if(delegate != null) {
             delegate.fetchWillStart();
@@ -147,7 +147,7 @@ public class ScriptFetcher {
     }
     
     private void disableSSLChecking()
-    {
+    { 
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
             @Override
